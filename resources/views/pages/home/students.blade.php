@@ -380,19 +380,43 @@
                         width: 128,
                         height: 128,
                     });
+
                     const payments = response.payments;
                     let paymentsHtml = '';
+
                     if (payments.length > 0) {
+                        paymentsHtml = `
+                       <div class="table-responsive">
+                            <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Month/Year</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
                         payments.forEach(payment => {
                             const formattedDate = new Date(payment.created_at).toLocaleDateString(
                                 'en-GB');
-                            paymentsHtml += `
-                        <li>Amount: ${payment.amount}, Date: ${formattedDate} For ${payment.paid_month}/${payment.paid_year}</li>
-                    `;
+                            paymentsHtml +=
+                                `<tr>
+                                <td>${payment.amount}</td>
+                                <td>${formattedDate}</td>
+                                <td>${payment.paid_month}/${payment.paid_year}</td>
+                                <td>${payment.status === 'pending'? '<span class="badge text-bg-warning">Pending</span>': payment.status === 'completed' ? '<span class="badge text-bg-success">Completed</span>' : '<span class="badge text-bg-danger">Failed</span>'}</td>
+                                </tr>`;
                         });
+
+                        paymentsHtml += `
+                        </tbody>
+                        </table>
+                        </div>`;
                     } else {
-                        paymentsHtml = '<li>No payments available.</li>';
+                        paymentsHtml = '<p>No payments available.</p>';
                     }
+
                     $('#view_payments').html(paymentsHtml);
 
                     $('#viewStudentModal').modal('show');
