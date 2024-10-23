@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Route\RouterController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
@@ -25,5 +26,5 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/students/details/{tcbt_student_number}', [StudentController::class, 'getStudentDetails']);
     Route::get('/students/{id}', [StudentController::class, 'show'])->name('students.show');
-
+    Route::post('/payments/add', [PaymentController::class, 'store'])->name('payments.store');
 });
