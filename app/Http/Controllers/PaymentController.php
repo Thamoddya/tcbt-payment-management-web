@@ -84,12 +84,17 @@ class PaymentController extends Controller
         return response()->json($payment);
     }
 
-    public function update(Request $request, $id)
+    public function getPaymentByID($id){
+        $payment = Payment::where('payment_id', $id)->get();
+        return response()->json($payment);
+    }
+
+    public function update(Request $request)
     {
-        $payment = Payment::findOrFail($id);
+        $payment = Payment::where('payment_id', $request->payment_id)->first();
         $payment->update($request->all());
 
-        return response()->json(['message' => 'Payment updated successfully', 'data' => $payment]);
+        return response()->json(['success' => true]);
     }
 
     public function destroy($id)
@@ -97,6 +102,9 @@ class PaymentController extends Controller
         $payment = Payment::findOrFail($id);
         $payment->delete();
 
-        return response()->json(['message' => 'Payment deleted successfully']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Payment deleted successfully',
+        ]);
     }
 }

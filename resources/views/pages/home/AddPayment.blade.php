@@ -54,6 +54,9 @@
                                         <th>Date</th>
                                         <th>Month/Year</th>
                                         <th>Status</th>
+                                        @hasrole('Super_Admin')
+                                            <th>Actions</th>
+                                        @endhasrole
                                     </tr>
                                 </thead>
                                 <tbody id="paymentsTableBody">
@@ -113,6 +116,53 @@
             </div>
         </div>
 
+        {{-- Edit Payment Modal --}}
+        <div class="modal fade" id="editPaymentModal" tabindex="-1" aria-labelledby="editPaymentModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editPaymentModalLabel">Edit Payment</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="editPaymentForm">
+                            <input type="hidden" id="editPaymentId">
+                            <div class="mb-3">
+                                <label for="editPaymentAmount" class="form-label">Amount</label>
+                                <input type="number" class="form-control" id="editPaymentAmount" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editPaidMonth" class="form-label">Paid Month</label>
+                                <select id="editPaidMonth" class="form-control" required>
+                                    @foreach (['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] as $month)
+                                        <option value="{{ $month }}">{{ $month }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editPaidYear" class="form-label">Paid Year</label>
+                                <select id="editPaidYear" class="form-control" required>
+                                    @foreach (['2023', '2024', '2025', '2026'] as $year)
+                                        <option value="{{ $year }}">{{ $year }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editPaymentStatus" class="form-label">Status</label>
+                                <select id="editPaymentStatus" class="form-control" required>
+                                    <option value="pending">Pending</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="failed">Failed</option>
+                                </select>
+                            </div>
+                            <button onclick="updatePayment()" type="submit" class="btn btn-primary">Update
+                                Payment</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -122,7 +172,9 @@
             $('#tcbt_student_number').focus();
 
             $('#tcbt_student_number').on('keyup', debounce(fetchStudentDetails, 300));
-
+            $('#addPaymentModal').on('show.bs.modal', function() {
+                resetAddPaymentForm();
+            });
             $('#addPaymentModal').on('show.bs.modal', function() {
                 const today = new Date();
                 const currentMonth = today.toLocaleString('default', {
@@ -138,6 +190,13 @@
                 $('#paymentDate').val(formattedDate);
             });
         });
+
+        function resetAddPaymentForm() {
+            $('#paymentAmount').val('');
+            $('#paidMonth').val('');
+            $('#paidYear').val('');
+            $('#paymentStatus').val('completed');
+        }
 
         function debounce(func, delay) {
             let debounceTimer;
@@ -178,24 +237,27 @@
                         let paymentsHtml = '';
 
                         if (payments.length > 0) {
+
                             payments.forEach(payment => {
                                 const formattedDate = new Date(payment.created_at)
                                     .toLocaleDateString('en-GB');
                                 paymentsHtml += `
-                                <tr>
-                                    <td>${payment.amount}</td>
-                                    <td>${formattedDate}</td>
-                                    <td>${payment.paid_month}/${payment.paid_year}</td>
-                                    <td>
-                                        ${
-                                            payment.status === 'pending'
-                                            ? '<span class="badge text-bg-warning">Pending</span>'
-                                            : payment.status === 'completed'
-                                            ? '<span class="badge text-bg-success">Completed</span>'
-                                            : '<span class="badge text-bg-danger">Failed</span>'
-                                        }
-                                    </td>
-                                </tr>`;
+            <tr>
+                <td>${payment.amount}</td>
+                <td>${formattedDate}</td>
+                <td>${payment.paid_month}/${payment.paid_year}</td>
+                <td>
+                    ${payment.status === 'pending' ? '<span class="badge text-bg-warning">Pending</span>' :
+                      payment.status === 'completed' ? '<span class="badge text-bg-success">Completed</span>' :
+                      '<span class="badge text-bg-danger">Failed</span>'}
+                </td>
+                @hasrole('Super_Admin')
+                    <td>
+                        <button class="btn btn-sm btn-warning" onclick="editPayment(${payment.payment_id})">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deletePayment(${payment.payment_id})">Delete</button>
+                    </td>
+                @endhasrole
+            </tr>`;
                             });
 
                             $('#paymentsTableBody').html(paymentsHtml);
@@ -271,6 +333,98 @@
             $('#studentDetails').hide();
             $('#paymentsSection').hide();
             $('#loadingIndicator').hide();
+        }
+
+        function editPayment(paymentId) {
+            console.log(paymentId);
+
+            $.ajax({
+                url: `/getPayment/${paymentId}`,
+                method: 'GET',
+                success: function(response) {
+                    console.log(response);
+
+                    if (response) {
+                        $('#editPaymentId').val(response[0].payment_id);
+                        $('#editPaymentAmount').val(response[0].amount);
+                        $('#editPaidMonth').val(response[0].paid_month);
+                        $('#editPaidYear').val(response[0].paid_year);
+                        $('#editPaymentStatus').val(response[0].status);
+
+                        $('#editPaymentModal').modal('show');
+                    } else {
+                        alert('Payment not found.');
+                    }
+                },
+                error: function() {
+                    alert('Failed to fetch payment details.');
+                }
+            });
+        }
+
+        function updatePayment() {
+            const paymentId = $('#editPaymentId').val();
+            const paymentData = {
+                _token: '{{ csrf_token() }}',
+                amount: $('#editPaymentAmount').val(),
+                paid_month: $('#editPaidMonth').val(),
+                paid_year: $('#editPaidYear').val(),
+                status: $('#editPaymentStatus').val(),
+                payment_id: paymentId
+            };
+
+
+            $.ajax({
+                url: `/updatePayment`,
+                method: 'POST',
+                data: paymentData,
+                success: function(response) {
+                    if (response.success) {
+                        swal.fire('Payment updated successfully!');
+                        $('#editPaymentModal').modal('hide');
+                        fetchStudentDetails();
+                    } else {
+                        alert('Failed to update payment.');
+                    }
+                },
+                error: function() {
+                    alert('Error updating payment.');
+                }
+            });
+        }
+
+        function deletePayment(paymentId) {
+
+
+            swal.fire({
+                title: 'Are you sure?',
+                text: 'You will not be able to recover this payment!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, keep it'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/payments/${paymentId}`,
+                        method: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                swal.fire('Payment deleted successfully!');
+                                fetchStudentDetails();
+                            } else {
+                                alert('Failed to delete payment.');
+                            }
+                        },
+                        error: function() {
+                            alert('Error deleting payment.');
+                        }
+                    });
+                }
+            });
         }
     </script>
 @endsection

@@ -27,4 +27,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/students/details/{tcbt_student_number}', [StudentController::class, 'getStudentDetails']);
     Route::get('/students/{id}', [StudentController::class, 'show'])->name('students.show');
     Route::post('/payments/add', [PaymentController::class, 'store'])->name('payments.store');
+
+    Route::get('/getPayment/{id}', [PaymentController::class, 'getPaymentByID']);
+    Route::post('/updatePayment', [PaymentController::class, 'update']);
+    Route::delete('/payments/{id}', [PaymentController::class, 'destroy']);
 });
