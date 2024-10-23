@@ -59,12 +59,36 @@ class StudentController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $student = Student::findOrFail($id);
-        $student->update($request->all());
+        $student = Student::where('tcbt_student_number', $request->tcbt_student_number)->first();
 
-        return response()->json(['message' => 'Student updated successfully', 'data' => $student]);
+        // Validate the request data
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'contact_no' => 'required|string|max:10|min:10|unique:students,contact_no,' . $student->id,
+            'grade' => 'required|string|max:50',
+            'school' => 'required|string|max:255',
+            'address' => 'nullable|string|max:500',
+            'parent_contact_no' => 'nullable|string|max:15',
+            'parent_name' => 'nullable|string|max:255',
+            'status' => 'required|boolean',
+        ]);
+
+        // Update student data
+        $student->update([
+            'name' => $request->name,
+            'contact_no' => $request->contact_no,
+            'grade' => $request->grade,
+            'school' => $request->school,
+            'address' => $request->address,
+            'parent_contact_no' => $request->parent_contact_no,
+            'parent_name' => $request->parent_name,
+            'status' => $request->status,
+        ]);
+
+        // Return success response
+        return response()->json(['success' => 'Student updated successfully.']);
     }
 
     public function destroy($id)

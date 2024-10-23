@@ -51,7 +51,8 @@
                                             <td>
                                                 <a href="javascript:void(0)" class="btn btn-success btn-sm my-1"
                                                     onclick="viewStudent({{ $student->id }})">View</a>
-                                                <a href="" class="btn btn-primary btn-sm my-1">Edit</a>
+                                                <a href="javascript:void(0)" class="btn btn-primary btn-sm my-1"
+                                                    onclick="loadStudentData({{ $student->id }})">Edit</a>
                                                 <a href="" class="btn btn-danger btn-sm my-1">Delete</a>
 
                                             </td>
@@ -232,6 +233,91 @@
             </div>
         </div>
 
+        {{-- Update Student Modal --}}
+
+        <div class="modal fade" id="editStudentModal" tabindex="-1" aria-labelledby="editStudentModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editStudentModalLabel">Edit Student</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editStudentForm">
+                            @csrf
+                            @method('PUT')
+
+                            <!-- Student Number (Read-only) -->
+                            <div class="form-group">
+                                <label for="edit_tcbt_student_number"><strong>Student Number:</strong></label>
+                                <input type="text" class="form-control" id="edit_tcbt_student_number"
+                                    name="tcbt_student_number" readonly>
+                            </div>
+
+                            <!-- Name -->
+                            <div class="form-group mt-2">
+                                <label for="edit_name"><strong>Name:</strong></label>
+                                <input type="text" class="form-control" id="edit_name" name="name">
+                            </div>
+
+                            <!-- Contact No -->
+                            <div class="form-group mt-2">
+                                <label for="edit_contact_no"><strong>Contact No:</strong></label>
+                                <input type="text" class="form-control" id="edit_contact_no" name="contact_no">
+                            </div>
+
+                            <!-- Grade -->
+                            <div class="form-group mt-2">
+                                <label for="edit_grade"><strong>Grade:</strong></label>
+                                <input type="text" class="form-control" id="edit_grade" name="grade">
+                            </div>
+
+                            <!-- School -->
+                            <div class="form-group mt-2">
+                                <label for="edit_school"><strong>School:</strong></label>
+                                <input type="text" class="form-control" id="edit_school" name="school">
+                            </div>
+
+                            <!-- Address -->
+                            <div class="form-group mt-2">
+                                <label for="edit_address"><strong>Address:</strong></label>
+                                <textarea class="form-control" id="edit_address" name="address" rows="2"></textarea>
+                            </div>
+
+                            <!-- Parent Contact No -->
+                            <div class="form-group mt-2">
+                                <label for="edit_parent_contact_no"><strong>Parent Contact No:</strong></label>
+                                <input type="text" class="form-control" id="edit_parent_contact_no"
+                                    name="parent_contact_no">
+                            </div>
+
+                            <!-- Parent Name -->
+                            <div class="form-group mt-2">
+                                <label for="edit_parent_name"><strong>Parent Name:</strong></label>
+                                <input type="text" class="form-control" id="edit_parent_name" name="parent_name">
+                            </div>
+
+                            <!-- Status -->
+                            <div class="form-group mt-2">
+                                <label for="edit_status"><strong>Status:</strong></label>
+                                <select class="form-control" id="edit_status" name="status">
+                                    <option value="1">Active</option>
+                                    <option value="0">Inactive</option>
+                                </select>
+                            </div>
+
+                            <!-- Update Button -->
+                            <div class="form-group mt-3">
+                                <button type="button" onclick="updateStudent()" class="btn btn-primary">Update
+                                    Student</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 @endsection
 
@@ -313,6 +399,69 @@
                 },
                 error: function(xhr) {
                     alert('Error fetching student data');
+                }
+            });
+        }
+
+        function loadStudentData(studentId) {
+            $.ajax({
+                url: '/students/' + studentId,
+                method: 'GET',
+                success: function(response) {
+                    const student = response.student;
+
+                    $('#edit_tcbt_student_number').val(student.tcbt_student_number);
+                    $('#edit_name').val(student.name);
+                    $('#edit_contact_no').val(student.contact_no);
+                    $('#edit_grade').val(student.grade);
+                    $('#edit_school').val(student.school);
+                    $('#edit_address').val(student.address);
+                    $('#edit_parent_contact_no').val(student.parent_contact_no);
+                    $('#edit_parent_name').val(student.parent_name);
+                    $('#edit_status').val(student.status);
+
+                    $('#editStudentModal').modal('show');
+                },
+                error: function(xhr) {
+                    alert('Error fetching student data');
+                }
+            });
+        }
+
+
+        function updateStudent() {
+            const studentId = $('#edit_tcbt_student_number').val();
+
+            const formData = {
+                _token: '{{ csrf_token() }}',
+                _method: 'POST',
+                name: $('#edit_name').val(),
+                contact_no: $('#edit_contact_no').val(),
+                grade: $('#edit_grade').val(),
+                school: $('#edit_school').val(),
+                address: $('#edit_address').val(),
+                parent_contact_no: $('#edit_parent_contact_no').val(),
+                parent_name: $('#edit_parent_name').val(),
+                status: $('#edit_status').val(),
+                tcbt_student_number: studentId
+            };
+
+            $.ajax({
+                url: 'student/update',
+                method: 'POST',
+                data: formData,
+                success: function(response) {
+                    alert('Student updated successfully');
+                    $('#editStudentModal').modal('hide');
+                    location.reload();
+                },
+                error: function(xhr) {
+                    const errors = xhr.responseJSON.errors;
+                    let errorMessage = 'Error updating student: ';
+                    for (const key in errors) {
+                        errorMessage += errors[key][0] + ' ';
+                    }
+                    alert(errorMessage);
                 }
             });
         }
