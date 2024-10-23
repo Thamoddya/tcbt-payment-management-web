@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Route;
 
 use App\Http\Controllers\Controller;
+use App\Models\Student;
 use Illuminate\Http\Request;
 use App\Models\Payment;
 use Carbon\Carbon;
@@ -46,7 +47,12 @@ class RouterController extends Controller
 
     public function students()
     {
-        return view('pages.home.students');
+
+        $allStudents = Student::orderBy('created_at', 'desc')->get();
+
+        return view('pages.home.students', compact([
+            'allStudents'
+        ]));
     }
 
 }

@@ -7,6 +7,10 @@
     <title>TCBT CAMPUS</title>
     <link rel="shortcut icon" type="image/png" href="{{ asset('assets/images/logos/favicon.svg') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/styles.min.css') }}" />
+    <link
+        href="https://cdn.datatables.net/v/bs5/jszip-3.10.1/dt-2.1.8/af-2.7.0/b-3.1.2/b-colvis-3.1.2/b-html5-3.1.2/b-print-3.1.2/r-3.0.3/datatables.min.css"
+        rel="stylesheet">
+
 </head>
 
 <body>
@@ -43,8 +47,27 @@
     <script src="{{ asset('assets/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
     <script src="{{ asset('assets/libs/simplebar/dist/simplebar.js') }}"></script>
     <script src="{{ asset('assets/js/dashboard.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script
+        src="https://cdn.datatables.net/v/bs5/jszip-3.10.1/dt-2.1.8/af-2.7.0/b-3.1.2/b-colvis-3.1.2/b-html5-3.1.2/b-print-3.1.2/r-3.0.3/datatables.min.js">
+    </script>
 
+    <script>
+        $(document).ready(function() {
+            $('#dataTable').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ]
+                }
+
+            );
+        });
+    </script>
     @yield('scripts')
+
+
 
 </body>
 

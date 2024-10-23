@@ -15,23 +15,48 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
+        // Validate the incoming request data
         $request->validate([
-            'name' => 'required',
-            'contact_no' => 'required',
-            'grade' => 'required',
-            'school' => 'required',
-            'address' => 'required',
+            'name' => 'required|string|max:255',
+            'contact_no' => 'required|string|max:10|min:10|unique:students,contact_no',
+            'grade' => 'required|string|max:50',
+            'school' => 'required|string|max:255',
+            'address' => 'required|string|max:500',
+            'parent_contact_no' => 'sometimes|max:15',
+            'parent_name' => 'sometimes|max:255',
         ]);
 
-        $student = Student::create($request->all());
+        //Generate TCBT Student Number TCBT-YEAR-RANDOM 10 digits
+        $year = date('Y');
+        $random = mt_rand(1000000000, 9999999999);
+        $tcbt_student_number = "TCBT$year-$random";
 
-        return response()->json(['message' => 'Student created successfully', 'data' => $student], 201);
+
+        // Create a new student record
+        Student::create([
+            'tcbt_student_number' => $tcbt_student_number,
+            'name' => $request->name,
+            'contact_no' => $request->contact_no,
+            'grade' => $request->grade,
+            'school' => $request->school,
+            'address' => $request->address,
+            'parent_contact_no' => $request->parent_contact_no,
+            'parent_name' => $request->parent_name,
+        ]);
+
+        // Return a success response
+        return response()->json(['success' => 'Student added successfully.']);
     }
 
     public function show($id)
     {
         $student = Student::findOrFail($id);
-        return response()->json($student);
+        $studentPayments = $student->payments;
+
+        return response()->json([
+            'student' => $student,
+            'payments' => $studentPayments,
+        ]);
     }
 
     public function update(Request $request, $id)

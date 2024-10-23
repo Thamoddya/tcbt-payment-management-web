@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('tcbt_student_number')->unique();
             $table->string('name');
-            $table->integer('contact_no')->nullable();
+            $table->string('contact_no')->nullable();
             $table->string('grade');
             $table->string('school');
             $table->string('address')->nullable();
