@@ -54,7 +54,6 @@
                                                 <a href="javascript:void(0)" class="btn btn-primary btn-sm my-1"
                                                     onclick="loadStudentData({{ $student->id }})">Edit</a>
                                                 <a href="" class="btn btn-danger btn-sm my-1">Delete</a>
-
                                             </td>
                                         </tr>
                                     @endforeach
@@ -323,6 +322,44 @@
 
 @section('scripts')
     <script>
+        $(document).ready(function() {
+            $('#dataTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: [{
+                        extend: 'copy',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    }
+                ]
+            });
+        });
+
+
         function addStudent() {
             const studentData = {
                 _token: '{{ csrf_token() }}',
@@ -451,7 +488,6 @@
                 }
             });
         }
-
 
         function updateStudent() {
             const studentId = $('#edit_tcbt_student_number').val();
