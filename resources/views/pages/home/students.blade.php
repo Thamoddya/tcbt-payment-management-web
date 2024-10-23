@@ -451,7 +451,12 @@
                 method: 'POST',
                 data: formData,
                 success: function(response) {
-                    alert('Student updated successfully');
+                    swal.fire({
+                        title: 'Success',
+                        text: response.success,
+                        icon: 'success',
+                        timer: 2000
+                    });
                     $('#editStudentModal').modal('hide');
                     location.reload();
                 },
