@@ -74,7 +74,7 @@ class DatabaseSeeder extends Seeder
         // $superAdminOne->assignRole($superAdminRole);
 
         $this->call([
-            // StudentSeeder::class,
+            StudentSeeder::class,
             PaymentSeeder::class,
         ]);
 

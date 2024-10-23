@@ -2,6 +2,66 @@
 
 @section('content')
     <div class="container-fluid">
+        {{-- Student Count --}}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">Students</h4>
+                        <div class="row text-center">
+
+                            <!-- Total and Active Students -->
+                            <div class="col-sm-6 col-md-3 mb-3">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="mb-1">Total Students</h5>
+                                        <p class="mb-0 fs-4 fw-bold">
+                                            {{ $totalStudents }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 col-md-3 mb-3">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="mb-1">Active Students</h5>
+                                        <p class="mb-0 fs-4 fw-bold">
+                                            {{ $totalActiveStudents }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Inactive Students and Pending Payments -->
+                            <div class="col-sm-6 col-md-3 mb-3">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="mb-1">Inactive Students</h5>
+                                        <p class="mb-0 fs-4 fw-bold">
+                                            {{ $totalInactiveStudents }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 col-md-3 mb-3">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="mb-1">Pending Payments</h5>
+                                        <p class="mb-0 fs-4 fw-bold">
+                                            {{ $pendingPayments }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-lg-8 d-flex align-items-strech">
                 <div class="card w-100">
@@ -149,7 +209,8 @@
                                             <td class="border-bottom-0">
                                                 @if (strtolower($payment->status) == 'completed')
                                                     <div class="d-flex align-items-center gap-2">
-                                                        <span class="badge bg-primary rounded-3 fw-semibold">Completed</span>
+                                                        <span
+                                                            class="badge bg-primary rounded-3 fw-semibold">Completed</span>
                                                     </div>
                                                 @elseif (strtolower($payment->status) == 'pending')
                                                     <div class="d-flex align-items-center gap-2">

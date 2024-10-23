@@ -34,7 +34,10 @@ class RouterController extends Controller
         $thisMonthEarning = Payment::where('paid_month', Carbon::now()->format('F'))->sum('amount');
 
         $lastFivePayments = Payment::orderBy('payment_id', 'desc')->limit(5)->get();
-
+        $totalStudents = Student::count();
+        $totalActiveStudents = Student::where('status', 'Active')->count();
+        $totalInactiveStudents = Student::where('status', 'Inactive')->count();
+        $pendingPayments = Payment::where('status', 'Pending')->count();
         return view('pages.home.HomePage', [
             'months' => $months,
             'chartData' => $chartData,
@@ -42,6 +45,11 @@ class RouterController extends Controller
             'donutData' => [$currentYearEarning, $lastYearEarning, $previousYearEarning],
             'thisMonthEarning' => $thisMonthEarning,
             'lastFivePayments' => $lastFivePayments,
+            'totalStudents' => $totalStudents,
+            'totalActiveStudents' => $totalActiveStudents,
+            'totalInactiveStudents' => $totalInactiveStudents,
+            'pendingPayments' => $pendingPayments,
+
         ]);
     }
 
@@ -50,9 +58,15 @@ class RouterController extends Controller
 
         $allStudents = Student::orderBy('created_at', 'desc')->get();
 
+
         return view('pages.home.students', compact([
-            'allStudents'
+            'allStudents',
         ]));
+    }
+
+    public function addStudentPayment()
+    {
+        return view('pages.home.AddPayment');
     }
 
 }

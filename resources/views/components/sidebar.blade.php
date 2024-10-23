@@ -36,56 +36,17 @@
                     <span class="hide-menu">Students</span>
                 </a>
             </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="./ui-alerts.html" aria-expanded="false">
-                    <span>
-                        <i class="ti ti-alert-circle"></i>
-                    </span>
-                    <span class="hide-menu">Alerts</span>
-                </a>
+            <li class="nav-small-cap">
+                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                <span class="hide-menu">Payments</span>
             </li>
             <li class="sidebar-item">
-                <a class="sidebar-link" href="./ui-card.html" aria-expanded="false">
+                <a class="sidebar-link {{ Route::is('add.payment') ? 'active' : '' }}" href="{{ route('add.payment') }}"
+                    aria-expanded="false">
                     <span>
                         <i class="ti ti-cards"></i>
                     </span>
-                    <span class="hide-menu">Card</span>
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="./ui-forms.html" aria-expanded="false">
-                    <span>
-                        <i class="ti ti-file-description"></i>
-                    </span>
-                    <span class="hide-menu">Forms</span>
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="./ui-typography.html" aria-expanded="false">
-                    <span>
-                        <i class="ti ti-typography"></i>
-                    </span>
-                    <span class="hide-menu">Typography</span>
-                </a>
-            </li>
-            <li class="nav-small-cap">
-                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                <span class="hide-menu">AUTH</span>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="./authentication-login.html" aria-expanded="false">
-                    <span>
-                        <i class="ti ti-login"></i>
-                    </span>
-                    <span class="hide-menu">Login</span>
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="./authentication-register.html" aria-expanded="false">
-                    <span>
-                        <i class="ti ti-user-plus"></i>
-                    </span>
-                    <span class="hide-menu">Register</span>
+                    <span class="hide-menu">Add Payments</span>
                 </a>
             </li>
         </ul>

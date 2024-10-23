@@ -2,13 +2,15 @@
 
 @section('content')
     <div class="container-fluid">
+
         <div class="row">
             {{-- Add Student Model Button --}}
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title mb-4">Add Student</h4>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStudentModel">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#addStudentModel">
                             Add Student
                         </button>
                     </div>
@@ -36,7 +38,7 @@
                                 <tbody>
                                     @foreach ($allStudents as $student)
                                         <tr>
-                                            <td>{{ $student->tcbt_student_number }}</td>
+                                            <td data-class-name="priority">{{ $student->tcbt_student_number }}</td>
                                             <td>{{ $student->name }}</td>
                                             <td>{{ $student->grade }}</td>
                                             <td>
