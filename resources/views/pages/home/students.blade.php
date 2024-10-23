@@ -183,6 +183,10 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <div class="form-group mt-3">
+                            <label><strong>QR Code:</strong></label>
+                            <div id="qr_code" class="d-flex justify-content-center align-items-center my-3"></div>
+                        </div>
                         <div class="form-group">
                             <label><strong>Student Number:</strong></label>
                             <p id="view_tcbt_student_number"></p>
@@ -284,12 +288,21 @@
                     $('#view_parent_name').text(student.parent_name);
                     $('#view_status').text(student.status == 1 ? 'Active' : 'Inactive');
 
+                    $('#qr_code').empty(); // Clear any existing QR code
+                    new QRCode(document.getElementById('qr_code'), {
+                        text: student.tcbt_student_number,
+                        width: 128,
+                        height: 128,
+                    });
                     const payments = response.payments;
                     let paymentsHtml = '';
                     if (payments.length > 0) {
                         payments.forEach(payment => {
-                            paymentsHtml +=
-                                `<li>Amount: ${payment.amount}, Date: ${payment.created_at} For ${payment.paid_month}/${payment.paid_year}</li>`;
+                            const formattedDate = new Date(payment.created_at).toLocaleDateString(
+                                'en-GB');
+                            paymentsHtml += `
+                        <li>Amount: ${payment.amount}, Date: ${formattedDate} For ${payment.paid_month}/${payment.paid_year}</li>
+                    `;
                         });
                     } else {
                         paymentsHtml = '<li>No payments available.</li>';
