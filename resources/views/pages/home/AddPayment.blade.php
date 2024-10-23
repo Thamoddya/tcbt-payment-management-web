@@ -81,10 +81,6 @@
                                 <input type="number" class="form-control" id="paymentAmount" required>
                             </div>
                             <div class="mb-3">
-                                <label for="paymentDate" class="form-label">Paid Date</label>
-                                <input type="date" disabled class="form-control" id="paymentDate" required>
-                            </div>
-                            <div class="mb-3">
                                 <label for="paidMonth" class="form-label">Paid Month</label>
                                 <select id="paidMonth" class="form-control" required>
                                     <option value="">Select Month</option>
@@ -227,12 +223,11 @@
         function addPayment() {
             const studentsId = $('#tcbt_student_number').val().trim();
             const amount = $('#paymentAmount').val();
-            const paymentDate = $('#paymentDate').val();
             const paidMonth = $('#paidMonth').val();
             const paidYear = $('#paidYear').val();
             const status = $('#paymentStatus').val();
 
-            if (!studentsId || !amount || !paymentDate || !paidMonth || !paidYear || !status) {
+            if (!studentsId || !amount || !paidMonth || !paidYear || !status) {
                 alert('Please fill all required fields.');
                 return;
             }
@@ -255,17 +250,17 @@
                 data: paymentData,
                 success: function(response) {
                     if (response.success) {
-                        alert('Payment added successfully!');
+                        swal.fire('Payment and invoice added successfully!');
                         $('#addPaymentModal').modal('hide');
                         fetchStudentDetails();
                     } else {
-                        alert('Failed to add payment.');
+                        swal.fire('Failed to add payment: ' + (response.errors ? JSON.stringify(response
+                                .errors) :
+                            response.message));
                     }
-                    console.log(response);
-
                 },
                 error: function(xhr) {
-                    console.log(xhr);
+                    alert('Error adding payment: ' + xhr.responseText);
                 }
             });
         }

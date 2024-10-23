@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\Student;
 use Illuminate\Http\Request;
@@ -19,37 +20,63 @@ class PaymentController extends Controller
     {
         $validator = \Validator::make($request->all(), [
             'students_id' => 'required',
-            'amount' => 'required',
-            'paid_month' => 'required',
-            'paid_year' => 'required',
-            'status' => 'required',
+            'amount' => 'required|numeric',
+            'paid_month' => 'required|string',
+            'paid_year' => 'required|string',
+            'status' => 'required|string',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
         }
+
         $student = Student::where('tcbt_student_number', $request->students_id)->first();
 
         if (!$student) {
-            return response()->json(['message' => 'Student not found'], 404);
+            return response()->json(['success' => false, 'message' => 'Student not found'], 404);
         }
 
         try {
-            Payment::create([
+            \DB::beginTransaction();
+
+            $payment = Payment::create([
                 'students_id' => $student->id,
                 'amount' => $request->amount,
-                'payment_date' => date('Y-m-d'),
+                'payment_date' => now(),
                 'paid_month' => $request->paid_month,
                 'paid_year' => $request->paid_year,
                 'status' => 'completed',
-                'processed_by' => 1,
+                'processed_by' => Auth::user()->id,
             ]);
+
+            $invoiceNumber = 'INV' . $student->tcbt_student_number . date('YmdHis');
+
+            Invoice::create([
+                'students_id' => $student->id,
+                'invoice_number' => $invoiceNumber,
+                'amount' => $request->amount,
+                'payment_date' => now(),
+                'processed_by' => Auth::user()->id,
+                'paid_month' => $request->paid_month,
+                'paid_year' => $request->paid_year,
+                'status' => 'paid',
+                'issue_date' => now(),
+            ]);
+
+            \DB::commit();
 
             return response()->json(['success' => true]);
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage(), 'line' => $e->getLine()]);
+            \DB::rollback();
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+            ]);
         }
     }
+
 
     public function show($id)
     {
