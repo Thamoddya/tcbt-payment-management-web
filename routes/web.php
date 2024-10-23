@@ -23,5 +23,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/students/store', [StudentController::class, 'store'])->name('students.store');
     Route::post('/student/update', [StudentController::class, 'update'])->name('students.update');
 
+    Route::get('/students/details/{tcbt_student_number}', [StudentController::class, 'getStudentDetails']);
+    Route::get('/students/{id}', [StudentController::class, 'show'])->name('students.show');
+
 });
-Route::get('/students/{id}', [StudentController::class, 'show'])->name('students.show');

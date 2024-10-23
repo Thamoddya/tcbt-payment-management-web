@@ -98,4 +98,20 @@ class StudentController extends Controller
 
         return response()->json(['message' => 'Student deleted successfully']);
     }
+
+    public function getStudentDetails($tcbt_student_number)
+    {
+        $student = Student::where('tcbt_student_number', $tcbt_student_number)->first();
+
+        if ($student) {
+            $payments = $student->payments()->orderBy('created_at', 'desc')->get();
+
+            return response()->json([
+                'student' => $student,
+                'payments' => $payments,
+            ]);
+        } else {
+            return response()->json(['error' => 'Student not found'], 404);
+        }
+    }
 }
