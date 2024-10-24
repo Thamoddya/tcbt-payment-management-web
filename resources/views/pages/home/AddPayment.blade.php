@@ -268,6 +268,7 @@
                             );
                             $('#paymentsSection').show();
                         }
+                        $('#addPaymentModal').modal('show');
                     } else {
                         alert('No student found with this TCBT number.');
                         $('#studentDetails').hide();
