@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Route\RouterController;
 use App\Http\Controllers\StudentController;
@@ -15,10 +16,14 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::middleware(['auth'])->group(function () {
 
     Route::group(['middleware' => ['role:Super_Admin']], function () {
-        Route::get('/', [RouterController::class, 'dashboard'])->name('dashboard');
-        Route::get('/students', [RouterController::class, 'students'])->name('students');
-    });
 
+        Route::post('/add-cashier', [Controller::class, 'addCashier'])->name('add.cashier');
+        Route::get('/get-cashier/{id}', [Controller::class, 'getCashiers'])->name('get.cashier');
+        Route::post('/update-cashier/{id}', [Controller::class, 'updateCashier'])->name('update.cashier');
+    });
+    Route::get('/students', [RouterController::class, 'students'])->name('students');
+    Route::get('/cashier', [RouterController::class, 'cashier'])->name('cashier');
+    Route::get('/', [RouterController::class, 'dashboard'])->name('dashboard');
     Route::get('/add-student-payment', [RouterController::class, 'addStudentPayment'])->name('add.payment');
 
     Route::post('/students/store', [StudentController::class, 'store'])->name('students.store');
@@ -31,4 +36,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/getPayment/{id}', [PaymentController::class, 'getPaymentByID']);
     Route::post('/updatePayment', [PaymentController::class, 'update']);
     Route::delete('/payments/{id}', [PaymentController::class, 'destroy']);
+
+    //Logout
+    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });

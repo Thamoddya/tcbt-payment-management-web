@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Route;
 
 use App\Http\Controllers\Controller;
 use App\Models\Student;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Payment;
 use Carbon\Carbon;
@@ -67,6 +68,14 @@ class RouterController extends Controller
     public function addStudentPayment()
     {
         return view('pages.home.AddPayment');
+    }
+
+    public function cashier()
+    {
+        $cashiers = User::role('Receptionist')->get();
+        return view('pages.home.cashier', compact([
+            'cashiers'
+        ]));
     }
 
 }
