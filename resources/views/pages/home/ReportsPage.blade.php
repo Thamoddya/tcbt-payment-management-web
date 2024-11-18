@@ -21,6 +21,7 @@
                             <div class="form-group mb-3">
                                 <label for="reportType">Report Type</label>
                                 <select class="form-control" id="reportType" name="reportType">
+                                    <option value="0" selected>Select Payment Type</option>
                                     <option value="student_payments">Student Payments</option>
                                     <option value="today_payments">Today’s Payments</option>
                                     <option value="monthly_payments">Monthly Payments</option>
@@ -76,8 +77,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <button id="downloadReportBtn" class="btn btn-success mt-3" style="display: none;">Download
-                            Report</button>
+
                     </div>
                 </div>
             </div>
@@ -128,34 +128,78 @@
                         console.log(response.data);
 
                         let reportHtml = '';
+                        let totalAmount = 0; // Variable to track the total payment amount
                         response.data.forEach(payment => {
+                            totalAmount += parseFloat(payment.amount); // Add to the total amount
                             reportHtml += `
-                                <tr>
-                                    <td>${payment.payment_id}</td>
-                                    <td>${payment.student.name}</td>
-                                    <td>${payment.amount}</td>
-                                    <td>${payment.status}</td>
-                                    <td>${payment.paid_month}/${payment.paid_year}</td>
-                                    <td>${new Date(payment.payment_date).toLocaleDateString()}</td>
-                                </tr>
-                            `;
+                        <tr>
+                            <td>${payment.payment_id}</td>
+                            <td>${payment.student.name}</td>
+                            <td>${payment.amount}</td>
+                            <td>${payment.status}</td>
+                            <td>${payment.paid_month}/${payment.paid_year}</td>
+                            <td>${new Date(payment.payment_date).toLocaleDateString()}</td>
+                        </tr>
+                    `;
                         });
+
+                        // Clear old data and destroy the DataTable
+                        $('#reportTable').DataTable().clear().destroy();
+
+                        // Insert the new data
                         $('#reportTable tbody').html(reportHtml);
-                        $('#downloadReportBtn').show().off('click').on('click', function() {
-                            window.location.href = response.download_url;
+
+                        // Reinitialize DataTable with Export Buttons
+                        $('#reportTable').DataTable({
+                            dom: 'Bfrtip',
+                            buttons: [{
+                                    extend: 'excelHtml5',
+                                    text: 'Download Excel',
+                                    exportOptions: {
+                                        columns: ':visible'
+                                    }
+                                },
+                                {
+                                    extend: 'pdfHtml5',
+                                    text: 'Download PDF',
+                                    exportOptions: {
+                                        columns: ':visible'
+                                    },
+                                    orientation: 'landscape',
+                                    pageSize: 'A4',
+                                    customize: function(doc) {
+                                        doc.content.push({
+                                            text: `\nTotal Amount: ${totalAmount.toFixed(2)}`,
+                                            style: 'subheader',
+                                            alignment: 'right'
+                                        });
+                                    }
+                                },
+                                {
+                                    extend: 'print',
+                                    text: 'Print',
+                                    exportOptions: {
+                                        columns: ':visible'
+                                    },
+                                    customize: function(win) {
+                                        $(win.document.body).append(
+                                            `<div style="text-align: right; font-weight: bold; margin-top: 20px;">Total Amount: ${totalAmount.toFixed(2)}</div>`
+                                        );
+                                    }
+                                }
+                            ]
                         });
                     } else {
-                        // alert('No data found for the selected filters.');
                         $('#reportTable tbody').html(
-                            '<tr><td colspan="6" class="text-center">No data available</td></tr>');
-                        $('#downloadReportBtn').hide();
+                            '<tr><td colspan="6" class="text-center">No data available</td></tr>'
+                        );
                     }
                 },
                 error: function() {
                     alert('Error generating report. Please try again.');
                     $('#reportTable tbody').html(
-                        '<tr><td colspan="6" class="text-center">Error loading data</td></tr>');
-                    $('#downloadReportBtn').hide();
+                        '<tr><td colspan="6" class="text-center">Error loading data</td></tr>'
+                    );
                 }
             });
         }
