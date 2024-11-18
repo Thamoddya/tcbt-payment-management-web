@@ -16,62 +16,62 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-        // $permissions = [
-        //     'create-receptionist',
-        //     'edit-receptionist',
-        //     'delete-receptionist',
-        //     'view-receptionist',
-        //     'create-student',
-        //     'edit-student',
-        //     'delete-student',
-        //     'view-student',
-        //     'create-invoice',
-        //     'edit-invoice',
-        //     'delete-invoice',
-        //     'view-invoice',
-        //     'create-payment',
-        //     'edit-payment',
-        //     'delete-payment',
-        //     'view-payment',
-        // ];
+        $permissions = [
+            'create-receptionist',
+            'edit-receptionist',
+            'delete-receptionist',
+            'view-receptionist',
+            'create-student',
+            'edit-student',
+            'delete-student',
+            'view-student',
+            'create-invoice',
+            'edit-invoice',
+            'delete-invoice',
+            'view-invoice',
+            'create-payment',
+            'edit-payment',
+            'delete-payment',
+            'view-payment',
+        ];
 
-        // foreach ($permissions as $permission) {
-        //     Permission::create([
-        //         'name' => $permission,
-        //     ]);
-        // }
+        foreach ($permissions as $permission) {
+            Permission::create([
+                'name' => $permission,
+            ]);
+        }
 
-        // $superAdminRole = Role::create(
-        //     [
-        //         "name" => "Super_Admin",
-        //     ]
-        // );
+        $superAdminRole = Role::create(
+            [
+                "name" => "Super_Admin",
+            ]
+        );
 
-        // $receptionistRole = Role::create(
-        //     [
-        //         "name" => "Receptionist",
-        //     ]
-        // );
+        $receptionistRole = Role::create(
+            [
+                "name" => "Receptionist",
+            ]
+        );
 
-        // $superAdminRole->givePermissionTo($permissions);
+        $superAdminRole->givePermissionTo($permissions);
 
-        // $receptionistRole->givePermissionTo([
-        //     'create-student',
-        //     'create-payment',
-        //     'edit-student',
-        //     'view-student',
-        //     'view-invoice',
-        //     'view-payment',
-        // ]);
+        $receptionistRole->givePermissionTo([
+            'create-student',
+            'create-payment',
+            'edit-student',
+            'view-student',
+            'view-invoice',
+            'view-payment',
+        ]);
 
-        // $superAdminOne = \App\Models\User::factory()->create([
-        //     'name' => 'Thamoddya Rashmitha',
-        //     'email' => 'thamo@gmail.com',
-        //     'nic' => '200000000V',
-        //     'password' => Hash::make('1234'),
-        // ]);
+        $superAdminOne = \App\Models\User::factory()->create([
+            'name' => 'Thamoddya Rashmitha',
+            'email' => 'thamo@gmail.com',
+            'nic' => '200000000V',
+            'password' => Hash::make('1234'),
+        ]);
 
-        // $superAdminOne->assignRole($superAdminRole);
+        $superAdminOne->assignRole($superAdminRole);
 
         $this->call([
             StudentSeeder::class,

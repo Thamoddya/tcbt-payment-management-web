@@ -30,6 +30,7 @@ class StudentFactory extends Factory
             'parent_contact_no' => '071' . $this->faker->numberBetween(1000000, 9999999),
             'parent_name' => $this->faker->name(),
             'status' => $this->faker->randomElement([0, 1]),
+            'need_to_pay' => $this->faker->numberBetween(0, 4000),
         ];
     }
 }

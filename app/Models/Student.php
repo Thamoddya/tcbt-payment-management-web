@@ -19,6 +19,7 @@ class Student extends Model
         'parent_contact_no',
         'parent_name',
         'status',
+        'need_to_pay'
     ];
 
     public function payments()
