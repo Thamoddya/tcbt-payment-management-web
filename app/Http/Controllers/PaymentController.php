@@ -36,6 +36,19 @@ class PaymentController extends Controller
             return response()->json(['success' => false, 'message' => 'Student not found'], 404);
         }
 
+        // Check if the student has already paid for the month
+        $payment = Payment::where('students_id', $student->id)
+            ->where('paid_month', $request->paid_month)
+            ->where('paid_year', $request->paid_year)
+            ->first();
+
+        if ($payment) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Payment for this month has already been made',
+            ], 422);
+        }
+
         try {
             \DB::beginTransaction();
 
@@ -84,7 +97,8 @@ class PaymentController extends Controller
         return response()->json($payment);
     }
 
-    public function getPaymentByID($id){
+    public function getPaymentByID($id)
+    {
         $payment = Payment::where('payment_id', $id)->get();
         return response()->json($payment);
     }

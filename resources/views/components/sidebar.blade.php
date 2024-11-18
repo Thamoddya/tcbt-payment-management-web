@@ -46,14 +46,23 @@
                         <span class="hide-menu">Cashiers</span>
                     </a>
                 </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link {{ Route::is('reports') ? 'active' : '' }}" href="{{ route('reports') }}"
+                        aria-expanded="false">
+                        <span>
+                            <i class="ti ti-users"></i>
+                        </span>
+                        <span class="hide-menu">Reports</span>
+                    </a>
+                </li>
             @endhasrole
             <li class="nav-small-cap">
                 <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                 <span class="hide-menu">Payments</span>
             </li>
             <li class="sidebar-item">
-                <a class="sidebar-link {{ Route::is('add.payment') ? 'active' : '' }}" href="{{ route('add.payment') }}"
-                    aria-expanded="false">
+                <a class="sidebar-link {{ Route::is('add.payment') ? 'active' : '' }}"
+                    href="{{ route('add.payment') }}" aria-expanded="false">
                     <span>
                         <i class="ti ti-cards"></i>
                     </span>

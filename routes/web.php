@@ -20,9 +20,13 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/add-cashier', [Controller::class, 'addCashier'])->name('add.cashier');
         Route::get('/get-cashier/{id}', [Controller::class, 'getCashiers'])->name('get.cashier');
         Route::post('/update-cashier/{id}', [Controller::class, 'updateCashier'])->name('update.cashier');
+
+        Route::post('/reports/generate', [Controller::class, 'generateReport'])->name('reports.generate');
+
     });
     Route::get('/students', [RouterController::class, 'students'])->name('students');
     Route::get('/cashier', [RouterController::class, 'cashier'])->name('cashier');
+    Route::get('/reports', [RouterController::class, 'Reports'])->name('reports');
     Route::get('/', [RouterController::class, 'dashboard'])->name('dashboard');
     Route::get('/add-student-payment', [RouterController::class, 'addStudentPayment'])->name('add.payment');
 

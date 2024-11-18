@@ -226,6 +226,7 @@
                     $('#loadingIndicator').hide();
 
                     if (response.student) {
+                        // Display student details
                         $('#student_name').text(response.student.name);
                         $('#student_grade').text(response.student.grade);
                         $('#student_school').text(response.student.school);
@@ -233,41 +234,38 @@
                         $('#student_status').text(response.student.status == 1 ? 'Active' : 'Inactive');
                         $('#studentDetails').show();
 
-                        const payments = response.payments;
+                        const payments = response.payments; // Array containing paid and due months
                         let paymentsHtml = '';
 
                         if (payments.length > 0) {
-
+                            // Loop through each payment or due entry
                             payments.forEach(payment => {
-                                const formattedDate = new Date(payment.created_at)
-                                    .toLocaleDateString('en-GB');
                                 paymentsHtml += `
-            <tr>
-                <td>${payment.amount}</td>
-                <td>${formattedDate}</td>
-                <td>${payment.paid_month}/${payment.paid_year}</td>
-                <td>
-                    ${payment.status === 'pending' ? '<span class="badge text-bg-warning">Pending</span>' :
-                      payment.status === 'completed' ? '<span class="badge text-bg-success">Completed</span>' :
-                      '<span class="badge text-bg-danger">Failed</span>'}
-                </td>
-                @hasrole('Super_Admin')
-                    <td>
-                        <button class="btn btn-sm btn-warning" onclick="editPayment(${payment.payment_id})">Edit</button>
-                        <button class="btn btn-sm btn-danger" onclick="deletePayment(${payment.payment_id})">Delete</button>
-                    </td>
-                @endhasrole
-            </tr>`;
+                            <tr>
+                                <td>${payment.month}</td>
+                                <td>${payment.amount}</td>
+                                <td>
+                                    ${payment.status === 'Due'
+                                        ? '<span class="badge text-bg-warning">Due</span>'
+                                        : '<span class="badge text-bg-success">Paid</span>'}
+                                </td>
+                                <td>
+                                    ${payment.status === 'Paid' ? new Date(payment.payment_date).toLocaleDateString('en-GB') : 'N/A'}
+                                </td>
+                            </tr>`;
                             });
 
                             $('#paymentsTableBody').html(paymentsHtml);
                             $('#paymentsSection').show();
                         } else {
                             $('#paymentsTableBody').html(
-                                '<tr><td colspan="4" class="text-center">No payments available.</td></tr>'
+                                '<tr><td colspan="4" class="text-center">No payment or due data available.</td></tr>'
                             );
                             $('#paymentsSection').show();
                         }
+
+                        // Set default payment amount in the modal
+                        $('#paymentAmount').val(response.student.need_to_pay);
                         $('#addPaymentModal').modal('show');
                     } else {
                         alert('No student found with this TCBT number.');
@@ -282,6 +280,7 @@
                 }
             });
         }
+
 
         function addPayment() {
             const studentsId = $('#tcbt_student_number').val().trim();
@@ -316,6 +315,10 @@
                         swal.fire('Payment and invoice added successfully!');
                         $('#addPaymentModal').modal('hide');
                         fetchStudentDetails();
+                    } else if (response.success == "false") {
+                        swal.fire('Failed to add payment: ' + (response.errors ? JSON.stringify(response
+                                .errors) :
+                            response.message));
                     } else {
                         swal.fire('Failed to add payment: ' + (response.errors ? JSON.stringify(response
                                 .errors) :
@@ -323,7 +326,12 @@
                     }
                 },
                 error: function(xhr) {
-                    alert('Error adding payment: ' + xhr.responseText);
+                    if (xhr.status == 422) {
+                        swal.fire('Failed to add payment: ' + JSON.stringify(xhr.responseJSON.message));
+                    } else {
+                        swal.fire('Failed to add payment: ' + xhr.responseJSON.message);
+
+                    }
                 }
             });
         }

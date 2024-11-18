@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -108,14 +109,52 @@ class StudentController extends Controller
         $student = Student::where('tcbt_student_number', $tcbt_student_number)->first();
 
         if ($student) {
+            // Fetch payments related to the student
             $payments = $student->payments()->orderBy('created_at', 'desc')->get();
+
+            // Get student creation date
+            $createdMonth = $student->created_at->month;
+            $createdYear = $student->created_at->year;
+
+            // Get the range of months (past 4 months and future 12 months)
+            $startMonth = Carbon::create($createdYear, $createdMonth)->subMonths(4);
+            $endMonth = Carbon::create($createdYear, $createdMonth)->addMonths(12);
+
+            $monthData = [];
+
+            while ($startMonth->lte($endMonth)) {
+                $monthKey = $startMonth->format('Y-m');
+
+                // Check if there's a payment for this month
+                $payment = $payments->first(function ($pay) use ($startMonth) {
+                    return strtolower(trim($pay->paid_month)) === strtolower($startMonth->format('F')) &&
+                        intval($pay->paid_year) === intval($startMonth->year);
+                });
+
+                if ($payment) {
+                    $monthData[] = [
+                        'month' => $startMonth->format('F Y'),
+                        'amount' => $payment->amount,
+                        'status' => $payment->status,
+                    ];
+                } else {
+                    $monthData[] = [
+                        'month' => $startMonth->format('F Y'),
+                        'amount' => $student->need_to_pay,
+                        'status' => 'Due',
+                    ];
+                }
+
+                $startMonth->addMonth();
+            }
 
             return response()->json([
                 'student' => $student,
-                'payments' => $payments,
+                'payments' => $monthData,
             ]);
         } else {
             return response()->json(['error' => 'Student not found'], 404);
         }
     }
+
 }

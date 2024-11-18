@@ -78,4 +78,9 @@ class RouterController extends Controller
         ]));
     }
 
+    public function Reports()
+    {
+        return view('pages.home.ReportsPage');
+    }
+
 }
