@@ -125,12 +125,14 @@
                 },
                 success: function(response) {
                     if (response.success) {
+                        console.log(response.data);
+
                         let reportHtml = '';
                         response.data.forEach(payment => {
                             reportHtml += `
                                 <tr>
                                     <td>${payment.payment_id}</td>
-                                    <td>${payment.student_name}</td>
+                                    <td>${payment.student.name}</td>
                                     <td>${payment.amount}</td>
                                     <td>${payment.status}</td>
                                     <td>${payment.paid_month}/${payment.paid_year}</td>
@@ -143,7 +145,7 @@
                             window.location.href = response.download_url;
                         });
                     } else {
-                        alert('No data found for the selected filters.');
+                        // alert('No data found for the selected filters.');
                         $('#reportTable tbody').html(
                             '<tr><td colspan="6" class="text-center">No data available</td></tr>');
                         $('#downloadReportBtn').hide();
