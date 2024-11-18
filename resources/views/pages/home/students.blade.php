@@ -9,8 +9,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title mb-4">Add Student</h4>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#addStudentModel">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStudentModel">
                             Add Student
                         </button>
                     </div>
@@ -122,6 +121,18 @@
                                 </div>
                             </div>
 
+                            {{-- need_to_pay amount --}}
+                            <div class="form-group row mt-2">
+                                <label for="need_to_pay" class="col-sm-3 col-form-label">
+                                    Payable Amount
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="number" maxlength="4" class="form-control" id="need_to_pay"
+                                        name="need_to_pay" placeholder="Payable Amount">
+                                    <div class="text-danger mt-1" id="error-need_to_pay"></div>
+                                </div>
+                            </div>
+
                             <!-- School -->
                             <div class="form-group row mt-2">
                                 <label for="school" class="col-sm-3 col-form-label">School</label>
@@ -143,7 +154,8 @@
 
                             <!-- Parent Contact No -->
                             <div class="form-group row mt-2">
-                                <label for="parent_contact_no" class="col-sm-3 col-form-label">Parent Contact No</label>
+                                <label for="parent_contact_no" class="col-sm-3 col-form-label">Parent Contact
+                                    No</label>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control" id="parent_contact_no"
                                         name="parent_contact_no" placeholder="Parent Contact No">
@@ -200,6 +212,10 @@
                         <div class="form-group">
                             <label><strong>Contact No:</strong></label>
                             <p id="view_contact_no"></p>
+                        </div>
+                        <div class="form-group mt-2">
+                            <label><strong>Payble Amount:</strong></label>
+                            <p id="view_need_to_pay"></p>
                         </div>
                         <div class="form-group">
                             <label><strong>Grade:</strong></label>
@@ -267,6 +283,13 @@
                                 <label for="edit_contact_no"><strong>Contact No:</strong></label>
                                 <input type="text" class="form-control" id="edit_contact_no" name="contact_no">
                             </div>
+
+                            {{-- need_to_pay --}}
+                            <div class="form-group mt-2">
+                                <label for="edit_need_to_pay"><strong>Payable Amount:</strong></label>
+                                <input type="number" class="form-control" id="edit_need_to_pay" name="need_to_pay">
+                            </div>
+
 
                             <!-- Grade -->
                             <div class="form-group mt-2">
@@ -373,6 +396,7 @@
                 address: $('#address').val(),
                 parent_contact_no: $('#parent_contact_no').val(),
                 parent_name: $('#parent_name').val(),
+                need_to_pay: $('#need_to_pay').val()
             };
 
             $('.text-danger').text('');
@@ -385,6 +409,7 @@
                     alert(response.success);
                     $('#studentForm')[0].reset();
                     $('#addStudentModel').modal('hide');
+                    window.location.reload();
                 },
                 error: function(xhr) {
                     if (xhr.status === 422) {
@@ -403,6 +428,8 @@
                 method: 'GET',
                 success: function(response) {
                     const student = response.student;
+                    console.log(student);
+
                     $('#view_tcbt_student_number').text(student.tcbt_student_number);
                     $('#view_name').text(student.name);
                     $('#view_contact_no').text(student.contact_no);
@@ -412,6 +439,7 @@
                     $('#view_parent_contact_no').text(student.parent_contact_no);
                     $('#view_parent_name').text(student.parent_name);
                     $('#view_status').text(student.status == 1 ? 'Active' : 'Inactive');
+                    $('#view_need_to_pay').text(student.need_to_pay);
 
                     $('#qr_code').empty(); // Clear any existing QR code
                     new QRCode(document.getElementById('qr_code'), {
@@ -482,6 +510,7 @@
                     $('#edit_parent_contact_no').val(student.parent_contact_no);
                     $('#edit_parent_name').val(student.parent_name);
                     $('#edit_status').val(student.status);
+                    $('#edit_need_to_pay').val(student.need_to_pay);
 
                     $('#editStudentModal').modal('show');
                 },
@@ -505,7 +534,8 @@
                 parent_contact_no: $('#edit_parent_contact_no').val(),
                 parent_name: $('#edit_parent_name').val(),
                 status: $('#edit_status').val(),
-                tcbt_student_number: studentId
+                tcbt_student_number: studentId,
+                need_to_pay : $('#edit_need_to_pay').val()
             };
 
             $.ajax({

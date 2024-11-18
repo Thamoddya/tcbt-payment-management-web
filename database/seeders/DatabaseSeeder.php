@@ -73,10 +73,10 @@ class DatabaseSeeder extends Seeder
 
         $superAdminOne->assignRole($superAdminRole);
 
-        $this->call([
-            StudentSeeder::class,
-            PaymentSeeder::class,
-        ]);
+        // $this->call([
+        //     StudentSeeder::class,
+        //     PaymentSeeder::class,
+        // ]);
 
     }
 }

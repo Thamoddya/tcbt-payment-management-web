@@ -24,6 +24,7 @@ class StudentController extends Controller
             'address' => 'required|string|max:500',
             'parent_contact_no' => 'sometimes|max:15',
             'parent_name' => 'sometimes|max:255',
+            'need_to_pay' => 'required|numeric',
         ]);
 
         //Generate TCBT Student Number TCBT-YEAR-RANDOM 10 digits
@@ -42,6 +43,7 @@ class StudentController extends Controller
             'address' => $request->address,
             'parent_contact_no' => $request->parent_contact_no,
             'parent_name' => $request->parent_name,
+            'need_to_pay' => $request->need_to_pay,
         ]);
 
         // Return a success response
@@ -73,6 +75,7 @@ class StudentController extends Controller
             'parent_contact_no' => 'nullable|string|max:15',
             'parent_name' => 'nullable|string|max:255',
             'status' => 'required|boolean',
+            'need_to_pay' => 'required|numeric',
         ]);
 
         // Update student data
@@ -85,6 +88,7 @@ class StudentController extends Controller
             'parent_contact_no' => $request->parent_contact_no,
             'parent_name' => $request->parent_name,
             'status' => $request->status,
+            'need_to_pay' => $request->need_to_pay,
         ]);
 
         // Return success response
