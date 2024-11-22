@@ -220,7 +220,7 @@
         $('#loadingIndicator').show();
 
         $.ajax({
-            url: `/students/details/` + encodeURIComponent(tcbtStudentNumber),
+            url: `/students/details/` + tcbtStudentNumber,
             method: 'GET',
             success: function (response) {
                 $('#loadingIndicator').hide();
@@ -276,10 +276,12 @@
                     $('#paymentsSection').hide();
                 }
             },
-            error: function () {
+            error: function (e) {
                 $('#loadingIndicator').hide();
                 $('#studentDetails').hide();
                 $('#paymentsSection').hide();
+                console.log(e);
+                
             }
         });
     }
