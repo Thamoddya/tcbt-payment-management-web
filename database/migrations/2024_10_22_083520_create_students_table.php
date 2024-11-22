@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('name');
             $table->string('contact_no')->nullable();
             $table->integer('need_to_pay')->default(0);
+            $table->date('registration_date')->nullable();
             $table->string('grade');
             $table->string('school');
             $table->string('address')->nullable();
