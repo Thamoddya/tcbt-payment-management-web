@@ -21,9 +21,11 @@ class Payment extends Model
         'status',
     ];
 
+    // Payment Model
     public function student()
     {
-        return $this->belongsTo(Student::class, 'students_id');
+        return $this->belongsTo(Student::class);
     }
+
 
 }

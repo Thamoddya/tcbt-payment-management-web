@@ -235,6 +235,8 @@
                     $('#studentDetails').show();
 
                     const payments = response.payments; // Array containing paid, due, and pending months
+                    console.log(payments);
+                    
                     let paymentsHtml = '';
 
                     if (payments.length > 0) {
@@ -243,7 +245,7 @@
                             let paymentStatusBadge = '';
                             if (payment.status === 'Due') {
                                 paymentStatusBadge = '<span class="badge text-bg-warning">Due</span>';
-                            } else if (payment.status === 'Paid') {
+                            } else if (payment.status === 'completed') {
                                 paymentStatusBadge = '<span class="badge text-bg-success">Paid</span>';
                             } else if (payment.status === 'Pending') {
                                 paymentStatusBadge = '<span class="badge text-bg-info">Pending</span>';

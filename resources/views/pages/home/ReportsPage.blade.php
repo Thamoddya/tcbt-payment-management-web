@@ -195,7 +195,9 @@
                         );
                     }
                 },
-                error: function() {
+                error: function(e) {
+                    console.log(e);
+                    
                     alert('Error generating report. Please try again.');
                     $('#reportTable tbody').html(
                         '<tr><td colspan="6" class="text-center">Error loading data</td></tr>'
