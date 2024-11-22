@@ -116,16 +116,19 @@ class StudentController extends Controller
             // Fetch payments related to the student
             $payments = $student->payments()->orderBy('created_at', 'desc')->get();
 
-            // Get student creation date
-            $createdMonth = $student->created_at->month;
-            $createdYear = $student->created_at->year;
+            // Get the student's registration date
+            $registrationDate = Carbon::parse($student->registration_date);
 
-            // Get the range of months (past 4 months and future 12 months)
-            $startMonth = Carbon::create($createdYear, $createdMonth)->subMonths(4);
-            $endMonth = Carbon::create($createdYear, $createdMonth)->addMonths(12);
+            // Set the start and end months based on the registration date
+            $startMonth = $registrationDate; // Start from the registration month
+            $currentMonth = Carbon::now();  // Current month for comparison
+
+            // Create month range from registration month to current month + 12 future months
+            $endMonth = $currentMonth->copy()->addMonths(12);  // Show payments for 12 months after the current month
 
             $monthData = [];
 
+            // Loop through the months from the registration month to the end (current month + 12)
             while ($startMonth->lte($endMonth)) {
                 $monthKey = $startMonth->format('Y-m');
 
@@ -135,20 +138,37 @@ class StudentController extends Controller
                         intval($pay->paid_year) === intval($startMonth->year);
                 });
 
+                // Determine payment status
                 if ($payment) {
+                    // If payment exists, check its status
                     $monthData[] = [
                         'month' => $startMonth->format('F Y'),
                         'amount' => $payment->amount,
-                        'status' => $payment->status,
+                        'status' => $payment->status, // Paid or Due
+                        'payment_date' => $payment->status === 'Paid' ? $payment->payment_date : null, // Only show payment date if paid
                     ];
                 } else {
-                    $monthData[] = [
-                        'month' => $startMonth->format('F Y'),
-                        'amount' => $student->need_to_pay,
-                        'status' => 'Due',
-                    ];
+                    // If no payment, check if the month is past, current, or future
+                    if ($startMonth->isFuture()) {
+                        // For future months, mark as "Pending"
+                        $monthData[] = [
+                            'month' => $startMonth->format('F Y'),
+                            'amount' => $student->need_to_pay,
+                            'status' => 'Pending', // Future payments are pending
+                            'payment_date' => null
+                        ];
+                    } else {
+                        // For past months (up to the current month), mark as "Due"
+                        $monthData[] = [
+                            'month' => $startMonth->format('F Y'),
+                            'amount' => $student->need_to_pay,
+                            'status' => 'Due', // Past payments are due
+                            'payment_date' => null
+                        ];
+                    }
                 }
 
+                // Move to the next month
                 $startMonth->addMonth();
             }
 
@@ -160,5 +180,7 @@ class StudentController extends Controller
             return response()->json(['error' => 'Student not found'], 404);
         }
     }
+
+
 
 }
