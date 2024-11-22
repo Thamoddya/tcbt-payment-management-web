@@ -65,10 +65,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $superAdminOne = \App\Models\User::factory()->create([
-            'name' => 'Thamoddya Rashmitha',
-            'email' => 'thamo@gmail.com',
-            'nic' => '200000000V',
-            'password' => Hash::make('1234'),
+            'name' => 'Sahan induwara herath',
+            'email' => 'sahaninduwara@gmail.com',
+            'nic' => '950922044v',
+            'password' => Hash::make('Teslian123+'),
         ]);
 
         $superAdminOne->assignRole($superAdminRole);
