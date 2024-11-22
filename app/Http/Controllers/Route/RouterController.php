@@ -78,9 +78,41 @@ class RouterController extends Controller
         ]));
     }
 
-    public function Reports()
+    public function Reports(Request $request)
     {
-        return view('pages.home.ReportsPage');
+        // Get the month and year from the request (default to current month and year)
+        $month = $request->input('month', Carbon::now()->month);
+        $year = $request->input('year', Carbon::now()->year);
+
+        // Get all students
+        $students = Student::with('payments') // Eager load payments
+            ->get();
+
+        // Filter the students based on the selected month and year
+        $filteredStudents = $students->map(function ($student) use ($month, $year) {
+            // Get the registration date and check the payment status for the selected month and year
+            $registerDate = Carbon::parse($student->registration_date);
+
+            // Generate 12 months from the registration date
+            $months = collect();
+            for ($i = 0; $i < 12; $i++) {
+                $months->push($registerDate->copy()->addMonths($i));
+            }
+
+            // Check if the selected month exists in the student's payment months
+            $hasPayment = $student->payments->some(function ($payment) use ($month, $year) {
+                return Carbon::parse($payment->payment_date)->month == $month
+                    && Carbon::parse($payment->payment_date)->year == $year;
+            });
+
+            // Add a 'payment_status' attribute to the student based on whether they've paid
+            $student->payment_status = $hasPayment ? 'Paid' : 'Non Paid';
+
+            return $student;
+        });
+        return view('pages.home.ReportsPage', compact([
+            'filteredStudents'
+        ]));
     }
 
 }

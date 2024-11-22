@@ -82,6 +82,77 @@
             </div>
         </div>
     </div>
+
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-4">
+                    Monthly Student Payments
+                </h4>
+
+                <!-- Month and Year Selection -->
+                <form method="GET" action="{{ route('reports') }}">
+                    <div class="form-row">
+                        <div class="col mt-2">
+                            <select name="month" class="form-control">
+                                <option value="">Select Month</option>
+                                @foreach (range(1, 12) as $month)
+                                    <option value="{{ $month }}" @if(request()->month == $month) selected @endif>
+                                        {{ \Carbon\Carbon::create()->month($month)->format('F') }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col mt-2">
+                            <select name="year" class="form-control">
+                                <option value="">Select Year</option>
+                                @foreach (range(2020, \Carbon\Carbon::now()->year) as $year)
+                                    <option value="{{ $year }}" @if(request()->year == $year) selected @endif>
+                                        {{ $year }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col mt-2">
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="table-responsive mt-4">
+                    <table id="dataTable" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th>Grade</th>
+                                <th>Payment Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($filteredStudents as $student)
+                                <tr>
+                                    <td>{{ $student->tcbt_student_number }}</td>
+                                    <td>{{ $student->name }}</td>
+                                    <td>{{ $student->grade }}</td>
+                                    <td>{{ $student->payment_status }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th>Grade</th>
+                                <th>Payment Status</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 @endsection
 
@@ -90,6 +161,14 @@
     $(document).ready(function () {
         // Initialize DataTable
         $('#reportTable').DataTable();
+        $('#dataTable').DataTable(
+            {
+                dom: 'Bfrtip',
+                buttons: [
+                    'excel', 'pdf', 'print'
+                ]
+            }
+        );
 
         $('#reportType').change(function () {
             const reportType = $(this).val();
