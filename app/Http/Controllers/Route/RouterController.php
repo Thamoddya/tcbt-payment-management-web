@@ -106,7 +106,7 @@ class RouterController extends Controller
             });
 
             // Add a 'payment_status' attribute to the student based on whether they've paid
-            $student->payment_status = $hasPayment ? 'Paid' : 'Non Paid';
+            $student->payment_status = $hasPayment ? 'Paid' : 'Due';
 
             return $student;
         });
