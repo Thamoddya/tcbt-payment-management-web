@@ -65,6 +65,28 @@
             </div>
 
             <div class="row">
+                <div class="col-12">
+                    <h4>Monthly Payments</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Total Payment (Amount)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($months as $index => $month)
+                                <tr>
+                                    <td>{{ $month }}</td>
+                                    <td>{{ $chartData[$index] }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
                 <div class="col-lg-8 d-flex align-items-strech">
                     <div class="card w-100">
                         <div class="card-body">
