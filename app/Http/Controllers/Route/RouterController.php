@@ -17,8 +17,9 @@ class RouterController extends Controller
             return Carbon::now()->subMonths($i)->format('F Y');
         })->reverse();
 
-        // Aggregate payments by month and year
+        // Aggregate completed payments by month and year
         $paymentData = Payment::selectRaw('CONCAT(paid_month, " ", paid_year) as period, SUM(amount) as total_amount')
+            ->where('status', 'completed') // Only consider completed payments
             ->groupBy('period')
             ->pluck('total_amount', 'period');
 
@@ -27,19 +28,29 @@ class RouterController extends Controller
             return $paymentData->get($month, 0);
         });
 
-        // Calculate yearly earnings
+        // Calculate yearly earnings (completed only)
         $currentYear = (string) Carbon::now()->year;
         $lastYear = (string) Carbon::now()->subYear()->year;
 
-        $currentYearEarning = Payment::where('paid_year', $currentYear)->sum('amount');
-        $lastYearEarning = Payment::where('paid_year', $lastYear)->sum('amount');
-        $previousYearEarning = Payment::whereNotIn('paid_year', [$currentYear, $lastYear])->sum('amount');
+        $currentYearEarning = Payment::where('paid_year', $currentYear)
+            ->where('status', 'completed')
+            ->sum('amount');
+        $lastYearEarning = Payment::where('paid_year', $lastYear)
+            ->where('status', 'completed')
+            ->sum('amount');
+        $previousYearEarning = Payment::whereNotIn('paid_year', [$currentYear, $lastYear])
+            ->where('status', 'completed')
+            ->sum('amount');
 
         $thisMonthEarning = Payment::where('paid_month', Carbon::now()->format('F'))
             ->where('paid_year', $currentYear)
+            ->where('status', 'completed')
             ->sum('amount');
 
-        $lastFivePayments = Payment::orderBy('payment_id', 'desc')->limit(5)->get();
+        $lastFivePayments = Payment::where('status', 'completed')
+            ->orderBy('payment_id', 'desc')
+            ->limit(5)
+            ->get();
         $totalStudents = Student::count();
         $totalActiveStudents = Student::where('status', 'Active')->count();
         $totalInactiveStudents = Student::where('status', 'Inactive')->count();
@@ -58,6 +69,7 @@ class RouterController extends Controller
             'pendingPayments' => $pendingPayments,
         ]);
     }
+
 
 
     public function students()

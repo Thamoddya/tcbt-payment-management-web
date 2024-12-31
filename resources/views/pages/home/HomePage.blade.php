@@ -75,10 +75,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($months as $index => $month)
+                            @foreach ($months as $index => $month)
                                 <tr>
                                     <td>{{ $month }}</td>
-                                    <td>{{ $chartData[$index] }}</td>
+                                    <td>Rs.{{ $chartData[$index] }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
