@@ -96,40 +96,67 @@ class RouterController extends Controller
         ]));
     }
 
-    public function Reports(Request $request)
+    public function reports(Request $request)
     {
-        // Get the month and year from the request (default to current month and year)
-        $month = $request->input('month', Carbon::now()->month);
-        $year = $request->input('year', Carbon::now()->year);
+        // Retrieve filter inputs
+        $tcbtNumber = $request->input('tcbt_student_number');   // e.g. "TCBT1001"
+        $month      = $request->input('month');                 // e.g. "January", "February"...
+        $year       = $request->input('year');                  // e.g. "2023", "2024"...
 
-        // Get all students
-        $students = Student::with('payments') // Eager load payments
-            ->get();
-
-        // Filter the students based on the selected month and year
-        $filteredStudents = $students->map(function ($student) use ($month, $year) {
-            // Get the registration date and check the payment status for the selected month and year
-            $registerDate = Carbon::parse($student->registration_date);
-
-            // Generate 12 months from the registration date
-            $months = collect();
-            for ($i = 0; $i < 12; $i++) {
-                $months->push($registerDate->copy()->addMonths($i));
+        // --- 1) Individual Student Payments ---
+        // If a student TCBT number is provided, get that student's payments
+        $studentPayments = collect();
+        if ($tcbtNumber) {
+            $student = Student::where('tcbt_student_number', $tcbtNumber)->first();
+            if ($student) {
+                // Order by created_at (or payment_date) as needed
+                $studentPayments = $student->payments()->orderBy('created_at', 'desc')->get();
             }
+        }
 
-            // Check if the selected month exists in the student's payment months
-            $hasPayment = $student->payments->some(function ($payment) use ($month, $year) {
-                return Carbon::parse($payment->payment_date)->month == $month
-                    && Carbon::parse($payment->payment_date)->year == $year;
-            });
+        // --- 2) All Students Paid/Unpaid for a Given Month/Year ---
+        $filteredStudents = collect();
+        if ($month && $year) {
+            $filteredStudents = Student::all();
 
-            // Add a 'payment_status' attribute to the student based on whether they've paid
-            $student->payment_status = $hasPayment ? 'Paid' : 'Due';
+            foreach ($filteredStudents as $st) {
+                // Check if there's at least one 'completed' payment record matching the requested month/year
+                $hasPayment = $st->payments()
+                    ->where('paid_month', $month)
+                    ->where('paid_year', $year)
+                    ->where('status', 'completed')
+                    ->exists();
 
-            return $student;
-        });
-        return view('pages.home.ReportsPage', compact([
-            'filteredStudents'
-        ]));
+                // Add a temporary attribute to indicate the payment status
+                $st->payment_status = $hasPayment ? 'Completed' : 'Unpaid';
+            }
+        }
+
+        // --- 3) Total revenue (sum of amounts) for that month/year using created_at
+        // We need to convert the month name (e.g. "January") into a numeric month (1).
+        // If either $month or $year is missing, we'll default this to 0 or skip it.
+        $totalPayments = 0;
+        if ($month && $year) {
+            try {
+                $monthNumber = Carbon::parse($month)->month;  // "January" => 1, "February" => 2, etc.
+
+                // Sum of the 'amount' from all payments created in that month/year
+                $totalPayments = Payment::whereYear('created_at', $year)
+                    ->whereMonth('created_at', $monthNumber)
+                    ->sum('amount');
+            } catch (\Exception $e) {
+                // In case Carbon parse fails or month is invalid, total remains 0
+                $totalPayments = 0;
+            }
+        }
+
+        return view('pages.home.ReportsPage', compact(
+            'tcbtNumber',
+            'month',
+            'year',
+            'studentPayments',
+            'filteredStudents',
+            'totalPayments'
+        ));
     }
 }
