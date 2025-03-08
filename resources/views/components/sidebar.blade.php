@@ -1,7 +1,7 @@
 <div>
     <div class="brand-logo d-flex align-items-center justify-content-between">
         <a href="{{ route('dashboard') }}" class="text-nowrap logo-img">
-            <img src="{{ asset('assets/images/logos/favicon.svg') }}" width="60" alt="" />
+            <img src="{{ asset('assets/images/logos/favicon.svg') }}" width="60" alt=""/>
         </a>
         <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
             <i class="ti ti-x fs-8"></i>
@@ -16,7 +16,7 @@
             </li>
             <li class="sidebar-item">
                 <a class="sidebar-link {{ Route::is('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}"
-                    aria-expanded="false">
+                   aria-expanded="false">
                     <span>
                         <i class="ti ti-layout-dashboard"></i>
                     </span>
@@ -29,7 +29,7 @@
             </li>
             <li class="sidebar-item">
                 <a class="sidebar-link {{ Route::is('students') ? 'active' : '' }}" href="{{ route('students') }}"
-                    aria-expanded="false">
+                   aria-expanded="false">
                     <span>
                         <i class="ti ti-user"></i>
                     </span>
@@ -37,24 +37,24 @@
                 </a>
             </li>
             @hasrole('Super_Admin')
-                <li class="sidebar-item">
-                    <a class="sidebar-link {{ Route::is('cashier') ? 'active' : '' }}" href="{{ route('cashier') }}"
-                        aria-expanded="false">
+            <li class="sidebar-item">
+                <a class="sidebar-link {{ Route::is('cashier') ? 'active' : '' }}" href="{{ route('cashier') }}"
+                   aria-expanded="false">
                         <span>
                             <i class="ti ti-users"></i>
                         </span>
-                        <span class="hide-menu">Cashiers</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link {{ Route::is('reports') ? 'active' : '' }}" href="{{ route('reports') }}"
-                        aria-expanded="false">
+                    <span class="hide-menu">Cashiers</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link {{ Route::is('reports') ? 'active' : '' }}" href="{{ route('reports') }}"
+                   aria-expanded="false">
                         <span>
                             <i class="ti ti-users"></i>
                         </span>
-                        <span class="hide-menu">Reports</span>
-                    </a>
-                </li>
+                    <span class="hide-menu">Reports</span>
+                </a>
+            </li>
             @endhasrole
             <li class="nav-small-cap">
                 <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
@@ -62,7 +62,7 @@
             </li>
             <li class="sidebar-item">
                 <a class="sidebar-link {{ Route::is('books') ? 'active' : '' }}" href="{{ route('books') }}"
-                    aria-expanded="false">
+                   aria-expanded="false">
                     <span>
                         <i class="ti ti-book"></i>
                     </span>
@@ -70,12 +70,23 @@
                 </a>
             </li>
             <li class="sidebar-item">
-                <a class="sidebar-link {{ Route::is('library.index') ? 'active' : '' }}" href="{{ route('library.index') }}"
-                    aria-expanded="false">
+                <a class="sidebar-link {{ Route::is('library.index') ? 'active' : '' }}"
+                   href="{{ route('library.index') }}"
+                   aria-expanded="false">
                     <span>
                         <i class="ti ti-bookmark"></i>
                     </span>
                     <span class="hide-menu">Library Out</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link {{ Route::is('library.history') ? 'active' : '' }}"
+                   href="{{ route('library.history') }}"
+                   aria-expanded="false">
+                    <span>
+                        <i class="ti ti-bookmark"></i>
+                    </span>
+                    <span class="hide-menu">History</span>
                 </a>
             </li>
             <li class="nav-small-cap">
@@ -84,7 +95,7 @@
             </li>
             <li class="sidebar-item">
                 <a class="sidebar-link {{ Route::is('add.payment') ? 'active' : '' }}"
-                    href="{{ route('add.payment') }}" aria-expanded="false">
+                   href="{{ route('add.payment') }}" aria-expanded="false">
                     <span>
                         <i class="ti ti-cards"></i>
                     </span>

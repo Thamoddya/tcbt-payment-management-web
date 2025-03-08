@@ -58,6 +58,20 @@
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger">Delete</button>
                                             </form>
+                                            @hasrole('Super_Admin')
+                                            {{--If book is NotAvailable show available button--}}
+                                            @if($book->status == 'Not Available')
+                                                <form action="{{ route('books.makeAvailable', $book->id) }}"
+                                                      method="POST"
+                                                      class="d-inline">
+                                                    @csrf
+                                                    @method('POST')
+                                                    <input type="hidden" name="status" value="Available">
+                                                    <button type="submit" class="btn btn-success">Force Available
+                                                    </button>
+                                                </form>
+                                            @endif
+                                            @endhasrole
                                         </td>
                                     </tr>
 

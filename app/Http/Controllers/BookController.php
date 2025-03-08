@@ -53,4 +53,14 @@ class BookController extends Controller
         Book::findOrFail($id)->delete();
         return redirect()->route('books')->with('success', 'Book deleted successfully');
     }
+
+    public function makeAvailable($id)
+    {
+        $book = Book::findOrFail($id);
+        $book->status = 'Available';
+        $book->save();
+
+        return redirect()->back()->with('success', 'Book marked as available.');
+    }
+
 }

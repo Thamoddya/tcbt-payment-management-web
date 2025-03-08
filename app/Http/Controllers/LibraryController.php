@@ -54,4 +54,15 @@ class LibraryController extends Controller
         return back()->with('success', 'Book returned successfully.');
     }
 
+    public function history()
+    {
+        $returnedBooks = BookHasStudent::where('status', 'Returned')
+            ->with(['book', 'student'])
+            ->orderBy('returned_at', 'desc')
+            ->get();
+
+        return view('pages.home.LibraryHistory', compact('returnedBooks'));
+    }
+
+
 }
