@@ -2,7 +2,25 @@
 
 @section('content')
     <div class="container">
-        <h2>Library Book Borrowing</h2>
+        <h2 class="my-4">Library Book Borrowing</h2>
+
+        {{--ERRORS AND SUCCESS--}}
+        @if(session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
+        @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+
+        @if($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
         <!-- Borrow Book Form -->
         <form action="{{ route('library.borrow') }}" method="POST">
@@ -10,11 +28,13 @@
             <div class="row mb-3">
                 <div class="col-md-4">
                     <label>Book ID</label>
-                    <input type="text" name="book_id" class="form-control" required autofocus placeholder="Scan QR Code">
+                    <input type="text" name="book_id" class="form-control" required autofocus
+                           placeholder="Scan QR Code">
                 </div>
                 <div class="col-md-4">
                     <label>Student TCBT Number</label>
-                    <input type="text" name="student_tcbt_number" class="form-control" required placeholder="Enter TCBT Number">
+                    <input type="text" name="student_tcbt_number" class="form-control" required
+                           placeholder="Enter TCBT Number">
                 </div>
                 <div class="col-md-4">
                     <label>Borrow Date</label>
