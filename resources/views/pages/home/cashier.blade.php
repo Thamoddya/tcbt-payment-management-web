@@ -3,11 +3,11 @@
 @section('content')
     <div class="container-fluid">
         <div class="row">
-            {{-- Add Student Model Button --}}
+            {{-- Add Cashier Model Button --}}
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title mb-4">Cashier Management</h4>
+                        <h4 class="card-title mb-4">Book Management</h4>
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCashierModel">
                             Add Cashier
                         </button>

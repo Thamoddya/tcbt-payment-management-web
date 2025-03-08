@@ -26,6 +26,7 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::get('/students', [RouterController::class, 'students'])->name('students');
     Route::get('/cashier', [RouterController::class, 'cashier'])->name('cashier');
+    Route::get('/books', [RouterController::class, 'Books'])->name('books');
     Route::get('/reports', [RouterController::class, 'Reports'])->name('reports');
     Route::get('/', [RouterController::class, 'dashboard'])->name('dashboard');
     Route::get('/add-student-payment', [RouterController::class, 'addStudentPayment'])->name('add.payment');
@@ -40,6 +41,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/getPayment/{id}', [PaymentController::class, 'getPaymentByID']);
     Route::post('/updatePayment', [PaymentController::class, 'update']);
     Route::delete('/payments/{id}', [PaymentController::class, 'destroy']);
+
+//    BOOK
+    Route::post('/books/store', [\App\Http\Controllers\BookController::class, 'store'])->name('books.store');
+    Route::post('/books/update/{id}', [\App\Http\Controllers\BookController::class, 'update'])->name('books.update');
+    Route::delete('/books/delete/{id}', [\App\Http\Controllers\BookController::class, 'destroy'])->name('books.destroy');
 
     //Logout
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');

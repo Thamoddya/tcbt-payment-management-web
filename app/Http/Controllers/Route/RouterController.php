@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Route;
 
 use App\Http\Controllers\Controller;
+use App\Models\Book;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -29,8 +30,8 @@ class RouterController extends Controller
         });
 
         // Calculate yearly earnings (completed only)
-        $currentYear = (string) Carbon::now()->year;
-        $lastYear = (string) Carbon::now()->subYear()->year;
+        $currentYear = (string)Carbon::now()->year;
+        $lastYear = (string)Carbon::now()->subYear()->year;
 
         $currentYearEarning = Payment::where('paid_year', $currentYear)
             ->where('status', 'completed')
@@ -71,7 +72,6 @@ class RouterController extends Controller
     }
 
 
-
     public function students()
     {
 
@@ -100,8 +100,8 @@ class RouterController extends Controller
     {
         // Retrieve filter inputs
         $tcbtNumber = $request->input('tcbt_student_number');   // e.g. "TCBT1001"
-        $month      = $request->input('month');                 // e.g. "January", "February"...
-        $year       = $request->input('year');                  // e.g. "2023", "2024"...
+        $month = $request->input('month');                 // e.g. "January", "February"...
+        $year = $request->input('year');                  // e.g. "2023", "2024"...
 
         // --- 1) Individual Student Payments ---
         // If a student TCBT number is provided, get that student's payments
@@ -158,5 +158,14 @@ class RouterController extends Controller
             'filteredStudents',
             'totalPayments'
         ));
+    }
+
+    public function Books()
+    {
+        $books = Book::all();
+
+        return view('pages.home.Books', compact([
+            'books'
+        ]));
     }
 }

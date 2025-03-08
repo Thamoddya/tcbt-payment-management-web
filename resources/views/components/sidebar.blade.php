@@ -58,6 +58,19 @@
             @endhasrole
             <li class="nav-small-cap">
                 <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                <span class="hide-menu">Library Management</span>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link {{ Route::is('books') ? 'active' : '' }}" href="{{ route('books') }}"
+                    aria-expanded="false">
+                    <span>
+                        <i class="ti ti-book"></i>
+                    </span>
+                    <span class="hide-menu">Books</span>
+                </a>
+            </li>
+            <li class="nav-small-cap">
+                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                 <span class="hide-menu">Payments</span>
             </li>
             <li class="sidebar-item">
