@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('title');
             $table->string('author')->nullable();
             $table->string('isbn')->nullable();
+            $table->string('price')->default(0);
+            $table->enum('status', ['Available', 'Not Available'])->default('Available');
             $table->timestamps();
         });
     }

@@ -14,5 +14,7 @@ class Book extends Model
         'title',
         'author',
         'isbn',
+        'price',
+        'status',
     ];
 }

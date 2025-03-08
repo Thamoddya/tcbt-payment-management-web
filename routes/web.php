@@ -47,6 +47,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/books/update/{id}', [\App\Http\Controllers\BookController::class, 'update'])->name('books.update');
     Route::delete('/books/delete/{id}', [\App\Http\Controllers\BookController::class, 'destroy'])->name('books.destroy');
 
+    Route::get('/library-out', [\App\Http\Controllers\LibraryController::class, 'index'])->name('library.index');
+    Route::post('/library-borrow', [\App\Http\Controllers\LibraryController::class, 'borrow'])->name('library.borrow');
+    Route::put('/library-return/{id}', [\App\Http\Controllers\LibraryController::class, 'returnBook'])->name('library.return');
+
+
     //Logout
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });

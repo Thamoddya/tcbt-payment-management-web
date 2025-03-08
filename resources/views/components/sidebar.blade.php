@@ -69,6 +69,15 @@
                     <span class="hide-menu">Books</span>
                 </a>
             </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link {{ Route::is('library.index') ? 'active' : '' }}" href="{{ route('library.index') }}"
+                    aria-expanded="false">
+                    <span>
+                        <i class="ti ti-bookmark"></i>
+                    </span>
+                    <span class="hide-menu">Library Out</span>
+                </a>
+            </li>
             <li class="nav-small-cap">
                 <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                 <span class="hide-menu">Payments</span>

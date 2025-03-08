@@ -19,6 +19,7 @@ class BookController extends Controller
             'title' => 'required',
             'author' => 'required',
             'isbn' => 'required|unique:books',
+            'price' => 'required',
         ]);
 
         $book = Book::create([
@@ -26,6 +27,7 @@ class BookController extends Controller
             'title' => $request->title,
             'author' => $request->author,
             'isbn' => $request->isbn,
+            'price' => $request->price,
         ]);
 
         return redirect()->route('books')->with('success', 'Book added successfully');
@@ -39,6 +41,7 @@ class BookController extends Controller
             'title' => 'required',
             'author' => 'required',
             'isbn' => 'required|unique:books,isbn,' . $book->id,
+            'price' => 'required',
         ]);
 
         $book->update($request->all());

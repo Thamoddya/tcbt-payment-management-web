@@ -28,6 +28,7 @@
                                     <th>Title</th>
                                     <th>Author</th>
                                     <th>ISBN</th>
+                                    <th>Price</th>
                                     <th>Download QR</th>
                                     <th>Action</th>
                                 </tr>
@@ -39,6 +40,7 @@
                                         <td>{{ $book->title }}</td>
                                         <td>{{ $book->author }}</td>
                                         <td>{{ $book->isbn }}</td>
+                                        <td>{{ $book->price}}</td>
                                         <td>
                                             <button class="btn btn-primary"
                                                     onclick="downloadQR('{{ $book->book_id }}')">
@@ -78,8 +80,12 @@
                                                         <input type="text" class="form-control" name="author"
                                                                value="{{ $book->author }}" required>
                                                         <label>ISBN</label>
+                                                        <input type="text" class="form-control" name="price"
+                                                               value="{{ $book->price }}" required>
                                                         <input type="text" class="form-control" name="isbn"
                                                                value="{{ $book->isbn }}" required>
+                                                        <label>Price</label>
+
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="submit" class="btn btn-primary">Update</button>
@@ -114,6 +120,8 @@
                             <input type="text" class="form-control" name="author" required>
                             <label>ISBN</label>
                             <input type="text" class="form-control" name="isbn" required>
+                            <label>Price</label>
+                            <input type="text" class="form-control" name="price" required>
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">Save</button>

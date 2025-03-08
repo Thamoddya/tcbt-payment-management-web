@@ -12,7 +12,12 @@ class BookHasStudent extends Model
     protected $fillable = [
         'book_id',
         'student_id',
+        'borrowed_at',
+        'returned_at',
+        'status',
     ];
+
+    protected $dates = ['borrowed_at', 'returned_at'];
 
     public function book()
     {
@@ -23,5 +28,5 @@ class BookHasStudent extends Model
     {
         return $this->belongsTo(Student::class);
     }
-    
+
 }
