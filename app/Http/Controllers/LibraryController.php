@@ -26,7 +26,7 @@ class LibraryController extends Controller
         $student = Student::where('tcbt_student_number', $request->student_tcbt_number)->first();
         if (!$student) return back()->with('error', 'Student not found.');
 
-        $book = Book::find($request->book_id);
+        $book = Book::where('book_id', $request->book_id)->first();
         if (!$book || $book->status != 'Available') return back()->with('error', 'Book not available.');
 
         BookHasStudent::create([

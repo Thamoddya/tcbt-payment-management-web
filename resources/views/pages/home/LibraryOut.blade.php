@@ -9,17 +9,12 @@
             @csrf
             <div class="row mb-3">
                 <div class="col-md-4">
-                    <label>Book</label>
-                    <select name="book_id" class="form-control" required>
-                        <option value="">Select a Book</option>
-                        @foreach($availableBooks as $book)
-                            <option value="{{ $book->id }}">{{ $book->title }} ({{ $book->book_id }})</option>
-                        @endforeach
-                    </select>
+                    <label>Book ID</label>
+                    <input type="text" name="book_id" class="form-control" required autofocus placeholder="Scan QR Code">
                 </div>
                 <div class="col-md-4">
                     <label>Student TCBT Number</label>
-                    <input type="text" name="student_tcbt_number" class="form-control" required>
+                    <input type="text" name="student_tcbt_number" class="form-control" required placeholder="Enter TCBT Number">
                 </div>
                 <div class="col-md-4">
                     <label>Borrow Date</label>
@@ -31,7 +26,7 @@
 
         <hr>
         <h3>Borrowed Books</h3>
-          <table class="table table-bordered" id="dataTable">
+        <table class="table table-bordered" id="dataTable">
             <thead>
             <tr>
                 <th>Book ID</th>
@@ -62,7 +57,7 @@
 
         <hr>
         <h3>Overdue Books (More than 14 days)</h3>
-          <table class="table table-bordered" id="dataTable">
+        <table class="table table-bordered" id="dataTable">
             <thead>
             <tr>
                 <th>Book ID</th>
