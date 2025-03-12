@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', [\App\Http\Controllers\ApiController::class, 'User']);
+    Route::post('/addAttendance', [\App\Http\Controllers\ApiController::class, 'AddAttendance']);
+
 });
+Route::post('/cashierLogin', [\App\Http\Controllers\ApiController::class, 'CatchierLogin']);

@@ -48,6 +48,11 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/books/delete/{id}', [\App\Http\Controllers\BookController::class, 'destroy'])->name('books.destroy');
     Route::post('/books/{id}/make-available', [\App\Http\Controllers\BookController::class, 'makeAvailable'])->name('books.makeAvailable');
 
+    //Attendance
+    Route::get('/attendance', [\App\Http\Controllers\AttendanceController::class, 'index'])->name('attendance.index');
+    Route::post('/attendance/mark', [\App\Http\Controllers\AttendanceController::class, 'markAttendance'])->name('attendance.mark');
+    Route::post('/attendance/bulk', [\App\Http\Controllers\AttendanceController::class, 'bulkAttendance'])->name('attendance.bulk');
+    Route::get('/attendance/history', [\App\Http\Controllers\AttendanceController::class, 'getAttendanceHistory'])->name('attendance.history');
 
 
     Route::get('/library-out', [\App\Http\Controllers\LibraryController::class, 'index'])->name('library.index');

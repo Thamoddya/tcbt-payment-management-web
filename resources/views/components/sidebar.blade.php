@@ -55,7 +55,22 @@
                     <span class="hide-menu">Reports</span>
                 </a>
             </li>
+
             @endhasrole
+
+            <li class="nav-small-cap">
+                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                <span class="hide-menu">Attendance</span>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link {{ Route::is('attendance.index') ? 'active' : '' }}" href="{{ route('attendance.index') }}"
+                   aria-expanded="false">
+                    <span>
+                        <i class="ti ti-check-box"></i>
+                    </span>
+                    <span class="hide-menu">Attendance</span>
+                </a>
+            </li>
             <li class="nav-small-cap">
                 <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                 <span class="hide-menu">Library Management</span>

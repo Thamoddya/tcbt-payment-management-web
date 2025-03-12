@@ -28,4 +28,8 @@ class Student extends Model
         return $this->hasMany(Payment::class, 'students_id', 'id');
     }
 
+    public function getStudentLastPayment()
+    {
+        return $this->payments()->latest()->first();
+    }
 }
